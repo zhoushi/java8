@@ -1,0 +1,54 @@
+package com.java8.Futures;
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadFactory;
+import java.util.stream.Collectors;
+
+import static java.util.stream.Collectors.toList;
+
+/**
+ * Created by Administrator on 2016/11/14.
+ */
+//使用CompletableFuture发送异步请求
+public class FuturePriceFinder {
+
+
+
+    private final List<Shop> shops = Arrays.asList(new Shop("BestPrice"),
+            new Shop("LetsSaveBig"),
+            new Shop("MyFavoriteShop"),
+            new Shop("BuyItAll"),
+            new Shop("ShopEasy"));
+
+    //使用定制的执行器
+    private final Executor executor = Executors.newFixedThreadPool(shops.size(), new ThreadFactory() {
+
+        @Override
+        public Thread newThread(Runnable r) {
+            Thread t = new Thread(r);
+            t.setDaemon(true);
+            return t;
+        }
+    });
+
+    public List<CompletableFuture<String >> completableFutureList(String product){
+        return shops.stream()
+                .map(shop -> CompletableFuture.supplyAsync(()->shop.getName()+"price is"+shop.getPrice(product)))
+                .collect(toList());
+    }
+
+    //异步请求,join不会抛出任何检测到的异常
+    public List<String> priceFinderAsync(String product){
+       List<CompletableFuture<String>> priceFutures = completableFutureList(product);
+
+        //转换成List<String>
+        List<String> prices = priceFutures.stream()
+                .map(CompletableFuture::join)
+                .collect(Collectors.toList());
+        return prices;
+    }
+}

@@ -11,6 +11,8 @@ public class FuturePriceMain {
     private static FuturePriceFinder bestPriceFinder = new FuturePriceFinder();
     public static void main(String ... args){
         execute("CompletableFuture",()->bestPriceFinder.priceFinderAsync("myPhone7"));
+        execute("Discount",()->bestPriceFinder.findPrices("myPhone8"));
+        execute("findPricesAsync",()->bestPriceFinder.findPricesAsync("myPhone9"));
     }
 
     private static void execute(String msg,Supplier<List<String>> s){

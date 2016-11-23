@@ -1,18 +1,18 @@
 package com.java8.patterns.factory;
 
 /**
- * Created by Administrator on 2016/11/3.
+ * Created by Administrator on 2016/11/23.
  */
-public class OrcWeapon implements Weapon {
+public class ElfWeapon implements Weapon {
     private WeaponType weaponType;
 
-    public OrcWeapon(WeaponType weaponType) {
+    public ElfWeapon(WeaponType weaponType){
         this.weaponType = weaponType;
     }
 
     @Override
     public String toString() {
-        return "Orcish " + weaponType;
+        return "Elven " + weaponType;
     }
 
     @Override
